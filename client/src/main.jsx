@@ -2,7 +2,15 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./Routes/Routes";
+import { ClerkProvider } from "@clerk/clerk-react";
 
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+
+if (!PUBLISHABLE_KEY) {
+  throw new Error("Missing Publishable Key");
+}
 createRoot(document.getElementById("root")).render(
-  <RouterProvider router={router} />
+  <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+    <RouterProvider router={router} />
+  </ClerkProvider>
 );
