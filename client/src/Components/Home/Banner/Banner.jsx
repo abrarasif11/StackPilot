@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import user from "../../../assets/banner/user_group.png";
 
 const Banner = () => {
   return (
@@ -19,7 +20,7 @@ const Banner = () => {
       </p>
 
       {/* Buttons */}
-      <div className="flex flex-col sm:flex-row gap-4">
+      <div className="flex flex-col sm:flex-row gap-4 mb-10">
         <Link to="/ai">
           <button className="bg-primary text-white px-8 py-3 rounded-md text-base font-medium hover:bg-indigo-700 transition">
             Start creating now
@@ -28,6 +29,16 @@ const Banner = () => {
         <button className="bg-white border border-gray-300 text-gray-800 px-8 py-3 rounded-md text-base font-medium hover:bg-gray-100 transition">
           Watch demo
         </button>
+      </div>
+
+      <div className="flex items-center gap-4 mx-auto  mt-8">
+        <img className="h-10" src={user} alt="user1" />
+
+        {/* Text */}
+        <span className="text-gray-600 text-sm sm:text-base">
+          Trusted by <span className="font-semibold text-gray-900">10k+</span>{" "}
+          people
+        </span>
       </div>
     </div>
   );
