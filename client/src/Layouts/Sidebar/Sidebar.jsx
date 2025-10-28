@@ -1,5 +1,60 @@
 import { useClerk, useUser } from "@clerk/clerk-react";
+import {
+  Eraser,
+  FileText,
+  Hash,
+  House,
+  Icon,
+  Image,
+  Scissors,
+  SquarePen,
+  Users,
+} from "lucide-react";
 import React from "react";
+import { NavLink } from "react-router-dom";
+
+const navItems = [
+  {
+    to: "/ai",
+    label: "Dashboard",
+    Icon: House,
+  },
+  {
+    to: "/ai/writeArticle",
+    label: "Write Article",
+    Icon: SquarePen,
+  },
+  {
+    to: "/ai/blogTitle",
+    label: "Blog Title",
+    Icon: Hash,
+  },
+  {
+    to: "/ai/generateImage",
+    label: "Generate Image",
+    Icon: Image,
+  },
+  {
+    to: "/ai/removeBackground",
+    label: "Remove Background",
+    Icon: Eraser,
+  },
+  {
+    to: "/ai/removeObject",
+    label: "Remove Object",
+    Icon: Scissors,
+  },
+  {
+    to: "/ai/reviewResume",
+    label: "Review Resume",
+    Icon: FileText,
+  },
+  {
+    to: "/ai/community",
+    label: "Community",
+    Icon: Users,
+  },
+];
 
 const Sidebar = ({ sidebar, setSidebar }) => {
   const { user } = useUser();
@@ -20,7 +75,29 @@ const Sidebar = ({ sidebar, setSidebar }) => {
           alt={user.fullName || "User"}
           className="w-13 rounded-full mx-auto"
         />
-        <h1 className="mt-1 text-center">{user.fullName || "Anonymous"}</h1>
+        <h1 className="mt-1 text-center mb-8">
+          {user.fullName || "Anonymous"}
+        </h1>
+        <div>
+          {navItems.map(({ to, label, Icon }) => (
+            <NavLink
+              key={to}
+              to={to}
+              end={to === "/ai"}
+              onClick={() => setSidebar(false)}
+              className={({ isActive }) =>
+                `px-3.5 py-2.5 flex items-center m-3 gap-3 rounded transition-colors duration-200 ${
+                  isActive
+                    ? " bg-gradient-to-r from-[#A594F9] via-[#9B70FF] to-[#B06FF9] text-white"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`
+              }
+            >
+              {Icon && <Icon className="w-5 h-5" />}
+              <span>{label}</span>
+            </NavLink>
+          ))}
+        </div>
       </div>
     </div>
   );
