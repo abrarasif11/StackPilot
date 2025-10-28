@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Sparkles, Wand2 } from "lucide-react";
+import { Gem, Sparkles } from "lucide-react";
+import { Protect } from "@clerk/clerk-react";
 
 const Dashboard = () => {
-  // Dummy data
   const stats = [
     {
       id: 1,
@@ -10,20 +10,21 @@ const Dashboard = () => {
       value: 12,
       icon: <Sparkles size={22} className="sm:size-6" />,
       gradient: "from-[#3C81F6] to-[#A594F9]",
+      protected: false,
     },
     {
       id: 2,
-      title: "Plan Status",
+      title: "Active Plan",
       value: "Premium",
-      icon: <Wand2 size={22} className="sm:size-6" />,
+      icon: <Gem size={22} className="sm:size-6" />,
       gradient: "from-[#A594F9] to-[#C084FC]",
+      protected: true,
     },
   ];
 
   const [creations, setCreations] = useState([]);
 
   const getDashboardData = async () => {
-    // simulate fetching data
     setCreations(stats);
   };
 
@@ -33,6 +34,7 @@ const Dashboard = () => {
 
   return (
     <div className="h-full overflow-y-auto p-6 bg-[#f8fafc] min-h-screen">
+      {/* Stats Section */}
       <div className="flex flex-wrap justify-start gap-4">
         {creations.map((item) => (
           <div
@@ -43,7 +45,13 @@ const Dashboard = () => {
             <div>
               <p className="text-sm text-gray-500">{item.title}</p>
               <h2 className="text-xl font-semibold text-gray-900">
-                {item.value}
+                {item.protected ? (
+                  <Protect plan="premium" fallback="Free">
+                    {item.value}
+                  </Protect>
+                ) : (
+                  item.value
+                )}
               </h2>
             </div>
 
@@ -55,6 +63,11 @@ const Dashboard = () => {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Recent Creations Section */}
+      <div className="mt-8 space-y-3">
+        <p className="text-lg font-semibold text-gray-800">Recent Creations</p>
       </div>
     </div>
   );
