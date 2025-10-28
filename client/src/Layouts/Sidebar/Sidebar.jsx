@@ -6,6 +6,7 @@ import {
   House,
   Icon,
   Image,
+  LogOut,
   Scissors,
   SquarePen,
   Users,
@@ -98,6 +99,13 @@ const Sidebar = ({ sidebar, setSidebar }) => {
             </NavLink>
           ))}
         </div>
+      </div>
+      <div className="w-full border-t border-gray-200 p-4 px-7 flex items-center justify-between">
+        <div></div>
+        <LogOut
+          onClick={signOut}
+          className="w-4.5 text-gray-400 hover:text-gray-700 transition cursor-pointer"
+        />
       </div>
     </div>
   );
