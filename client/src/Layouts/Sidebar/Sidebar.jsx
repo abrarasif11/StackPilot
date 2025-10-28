@@ -4,6 +4,10 @@ import React from "react";
 const Sidebar = ({ sidebar, setSidebar }) => {
   const { user } = useUser();
   const { signOut, openUserProfile } = useClerk();
+
+  if (!user) {
+    return null;
+  }
   return (
     <div
       className={`w-60 bg-white border-r border-gray-200 flex flex-col justify-between items-center max-sm:absolute top-14 bottom-0 ${
@@ -11,8 +15,12 @@ const Sidebar = ({ sidebar, setSidebar }) => {
       } transition-all duration-300 ease-in-out`}
     >
       <div className="my-7 w-full">
-        <img src={user.imageUrl} alt="" className="w-13 rounded-full mx-auto" />
-        <h1 className="mt-1 text-center">{user.fullName}</h1>
+        <img
+          src={user.imageUrl || "/default-avatar.png"}
+          alt={user.fullName || "User"}
+          className="w-13 rounded-full mx-auto"
+        />
+        <h1 className="mt-1 text-center">{user.fullName || "Anonymous"}</h1>
       </div>
     </div>
   );

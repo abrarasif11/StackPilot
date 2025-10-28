@@ -1,11 +1,14 @@
 import { Outlet } from "react-router-dom";
 import Logo from "../Shared/Logo/Logo";
-import { Menu, Sidebar, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import Sidebar from "./Sidebar/Sidebar";
+import { SignIn, useUser } from "@clerk/clerk-react";
 
 const Layouts = () => {
   const [sidebar, setSidebar] = useState(false);
-  return (
+  const { user } = useUser();
+  return user ? (
     <div className="flex flex-col items-start justify-start h-screen">
       <nav className="w-full px-8 min-h-14 flex items-center justify-between border-b border-gray-200">
         <Logo StackPilot />
@@ -21,7 +24,16 @@ const Layouts = () => {
           />
         )}
       </nav>
-      <Outlet />
+      <div className="flex-1 w-full flex h-[calc(100vh-64px)]">
+        <Sidebar sidebar={sidebar} setSidebar={setSidebar} />
+        <div className="flex-1 bg-[#F4F6FF]">
+          <Outlet />
+        </div>
+      </div>
+    </div>
+  ) : (
+    <div className="flex items-center justify-center h-screen">
+      <SignIn />
     </div>
   );
 };
