@@ -4,6 +4,7 @@ import Banner from "./Banner/Banner";
 import AiTools from "../AiTools/AiTools";
 import Testimonial from "../Testimonial/Testimonial";
 import Plan from "../Plan/Plan";
+import Footer from "../../Shared/Footer/Footer";
 
 const Home = () => {
   return (
@@ -13,6 +14,7 @@ const Home = () => {
       <AiTools />
       <Testimonial />
       <Plan />
+      <Footer />
     </>
   );
 };
