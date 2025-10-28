@@ -5,9 +5,9 @@ import {
   Type,
   Image as ImageIcon,
   Eraser,
-  Square,
   FileText,
   Users,
+  Scissors,
 } from "lucide-react";
 
 const tools = [
@@ -36,7 +36,7 @@ const tools = [
     route: "/ai/removeBackground",
   },
   {
-    icon: <Square className="w-6 h-6 text-indigo-500" />,
+    icon: <Scissors className="w-6 h-6 text-indigo-500" />,
     title: "Object Removal",
     desc: "Erase unwanted objects from your photos seamlessly with AI.",
     route: "/ai/removeObject",
