@@ -1,20 +1,23 @@
 import React, { useState } from "react";
+import img1 from "../../assets/banner/ai_gen_img_1.png";
+import img2 from "../../assets/banner/ai_gen_img_2.png";
+import img3 from "../../assets/banner/ai_gen_img_3.png";
 
 const Community = () => {
   const [creations, setCreations] = useState([
     {
       id: 1,
-      src: "/mnt/data/eeaee0e2-3aee-4fa1-8768-8c8650681a62.png", // your uploaded image
+      src: { img1 },
       likes: 2,
     },
     {
       id: 2,
-      src: "https://i.ibb.co/k3F9wzR/bike-boy.png", // replace with actual URL
+      src: { img2 },
       likes: 2,
     },
     {
       id: 3,
-      src: "https://i.ibb.co/0GjV6Qy/flying-car-boy.png", // replace with actual URL
+      src: { img3 },
       likes: 1,
     },
   ]);
