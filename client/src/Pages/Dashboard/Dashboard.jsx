@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Gem, Sparkles } from "lucide-react";
 import { Protect } from "@clerk/clerk-react";
+import CreationItems from "../../Components/CreationItems/CreationItems";
 
 const Dashboard = () => {
   const stats = [
@@ -19,6 +20,33 @@ const Dashboard = () => {
       icon: <Gem size={22} className="sm:size-6" />,
       gradient: "from-[#A594F9] to-[#C084FC]",
       protected: true,
+    },
+  ];
+
+  const items = [
+    {
+      id: 1,
+      prompt: "Generate a blog post about AI in education",
+      type: "Text",
+      createdAt: "2025-10-27T09:15:00Z",
+    },
+    {
+      id: 2,
+      prompt: "Create an image of a futuristic city skyline",
+      type: "Image",
+      createdAt: "2025-10-26T15:20:00Z",
+    },
+    {
+      id: 3,
+      prompt: "Summarize the latest AI trends report",
+      type: "Text",
+      createdAt: "2025-10-25T18:30:00Z",
+    },
+    {
+      id: 4,
+      prompt: "Generate a social media caption for a tech startup",
+      type: "Text",
+      createdAt: "2025-10-24T11:00:00Z",
     },
   ];
 
@@ -68,6 +96,11 @@ const Dashboard = () => {
       {/* Recent Creations Section */}
       <div className="mt-8 space-y-3">
         <p className="text-lg font-semibold text-gray-800">Recent Creations</p>
+        {items.length > 0 ? (
+          items.map((item) => <CreationItems key={item.id} item={item} />)
+        ) : (
+          <p className="text-gray-500 text-sm">No recent creations found.</p>
+        )}
       </div>
     </div>
   );
