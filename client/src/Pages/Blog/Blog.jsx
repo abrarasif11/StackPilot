@@ -18,7 +18,6 @@ const Blog = () => {
 
   const handleGenerate = () => {
     if (!keyword) return;
-    // Mock title generation
     setTitles([
       `Exploring ${keyword} in Modern ${selectedCategory}`,
       `The Ultimate Guide to ${keyword}`,
