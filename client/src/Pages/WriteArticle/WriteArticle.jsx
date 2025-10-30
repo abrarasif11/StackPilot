@@ -10,11 +10,9 @@ const WriteArticle = () => {
     e.preventDefault();
 
     if (!topic.trim()) {
-      setOutput("⚠️ Please enter a topic first.");
+      setOutput(" Please enter a topic first.");
       return;
     }
-
-    // Simulate AI generation with dummy content
     const dummyText =
       length === "short"
         ? `The future of ${topic} looks promising. As technology evolves, ${topic} continues to play a key role in shaping industries, improving efficiency, and enhancing creativity. With emerging trends and innovations, ${topic} will likely redefine how we interact with digital systems, offering new ways to connect, create, and collaborate.`
