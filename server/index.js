@@ -3,6 +3,7 @@ const cors = require("cors");
 const app = express();
 const dotenv = require("dotenv");
 const { clerkMiddleware, requireAuth } = require("@clerk/express");
+const aiRouter = require("./routes/aiRoutes");
 const port = process.env.PORT || 5000;
 require("dotenv").config();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use(clerkMiddleware());
 app.use(requireAuth());
 
+app.use("/api/ai", aiRouter);
 app.get("/", (req, res) => {
   res.send("StackPilot Server is Running");
 });

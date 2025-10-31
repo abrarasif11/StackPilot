@@ -1,15 +1,15 @@
-import OpenAI from "openai";
-import sql from "../configs/db";
-import { clerkClient } from "@clerk/express";
+const OpenAI = require("openai");
+const sql = require("../configs/db");
+const { clerkClient } = require("@clerk/express");
 
 const AI = new OpenAI({
   apiKey: process.env.GEMINI_API_KEY,
   baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
 });
 
-export const generateArticle = async (req, res) => {
+const generateArticle = async (req, res) => {
   try {
-    const { userId } = req.auth();
+    const { userId } = req.auth;
     const { prompt, length } = req.body;
     const plan = req.plan;
     const free_usage = req.free_usage;
@@ -20,6 +20,7 @@ export const generateArticle = async (req, res) => {
         message: "Limit reached. Upgrade to continue",
       });
     }
+
     const response = await AI.chat.completions.create({
       model: "gemini-2.0-flash",
       messages: [
@@ -34,8 +35,10 @@ export const generateArticle = async (req, res) => {
 
     const content = response.choices[0].message.content;
 
-    await sql` INSERT INTO creations (user_id, prompt, content, type)
-    VALUES (${userId}, ${prompt}, ${content}, 'article)`;
+    await sql`
+      INSERT INTO creations (user_id, prompt, content, type)
+      VALUES (${userId}, ${prompt}, ${content}, 'article')
+    `;
 
     if (plan !== "premium") {
       await clerkClient.users.updateUserMetadata(userId, {
@@ -44,9 +47,12 @@ export const generateArticle = async (req, res) => {
         },
       });
     }
+
     res.json({ success: true, content });
   } catch (err) {
     console.log(err.message);
     res.json({ success: false, message: err.message });
   }
 };
+
+module.exports = { generateArticle };
