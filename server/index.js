@@ -1,25 +1,22 @@
-const express = require("express");
-const cors = require("cors");
+import express from "express";
+import cors from "cors";
+import "dotenv/config";
+import { clerkMiddleware, requireAuth } from "@clerk/express";
+import aiRouter from "./routes/aiRoutes.js";
+
 const app = express();
-const dotenv = require("dotenv");
-const { clerkMiddleware, requireAuth } = require("@clerk/express");
-const aiRouter = require("./routes/aiRoutes");
-const port = process.env.PORT || 5000;
-require("dotenv").config();
 
-dotenv.config();
-
-// Middlewares
 app.use(cors());
 app.use(express.json());
 app.use(clerkMiddleware());
+
+app.get("/", (req, res) => res.send("StackPilot is in the SKY"));
+
 app.use(requireAuth());
 
 app.use("/api/ai", aiRouter);
-app.get("/", (req, res) => {
-  res.send("StackPilot Server is Running");
-});
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log("Server is running on port", PORT);
 });

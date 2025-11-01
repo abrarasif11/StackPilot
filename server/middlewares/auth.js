@@ -1,27 +1,25 @@
-const { clerkClient } = require("@clerk/express");
+import { clerkClient } from "@clerk/express";
 
-const auth = async (req, res, next) => {
+export const auth = async (req, res, next) => {
   try {
-    const { userId } = req.auth;
+    const { userId, has } = await req.auth();
+    const hasPremiumPlan = await has({ plan: "premium" });
+
     const user = await clerkClient.users.getUser(userId);
 
-    const hasPremiumPlan = user.privateMetadata.plan === "premium";
-    const free_usage = user.privateMetadata.free_usage || 0;
-
-    req.plan = hasPremiumPlan ? "premium" : "free";
-    req.free_usage = free_usage;
-
-    if (!hasPremiumPlan && free_usage === undefined) {
+    if (!hasPremiumPlan && user.privateMetadata.free_user) {
+      req.free_user = user.privateMetadata.free_user;
+    } else {
       await clerkClient.users.updateUserMetadata(userId, {
-        privateMetadata: { free_usage: 0 },
+        privateMetadata: {
+          free_user: 0,
+        },
       });
-      req.free_usage = 0;
+      req.free_user = 0;
     }
-
+    req.plan = hasPremiumPlan ? "premium" : "free";
     next();
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    res.json({ success: false, message: err.message });
   }
 };
-
-module.exports = { auth };

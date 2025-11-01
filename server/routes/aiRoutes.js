@@ -1,9 +1,9 @@
-const express = require("express");
-const { auth } = require("../middlewares/auth");
-const { generateArticle } = require("../controllers/aiController");
+import express from "express";
+import { auth } from "../middlewares/auth.js";
+import { generateArticle } from "../controllers/aiController.js";
 
 const aiRouter = express.Router();
 
-aiRouter.post("/generateArticle", auth, generateArticle);
+aiRouter.post("/generate-article", auth, generateArticle);
 
-module.exports = aiRouter;
+export default aiRouter;

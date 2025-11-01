@@ -1,10 +1,5 @@
-require("dotenv").config();
-const { neon } = require("@neondatabase/serverless");
+import { neon } from "@neondatabase/serverless";
 
-if (!process.env.DATABASE_URL) {
-  throw new Error("DATABASE_URL is not defined in your .env file!");
-}
+const sql = neon(process.env.DATABASE_URL);
 
-const client = neon(process.env.DATABASE_URL);
-
-module.exports = client;
+export default sql;
