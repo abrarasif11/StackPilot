@@ -7,17 +7,17 @@ const Community = () => {
   const [creations, setCreations] = useState([
     {
       id: 1,
-      src: { img1 },
+      src: img1,
       likes: 2,
     },
     {
       id: 2,
-      src: { img2 },
+      src: img2,
       likes: 2,
     },
     {
       id: 3,
-      src: { img3 },
+      src: img3,
       likes: 1,
     },
   ]);
