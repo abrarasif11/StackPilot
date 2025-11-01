@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import sql from "../configs/db.js";
 import { clerkClient } from "@clerk/express";
 import axios from "axios";
+import { v2 as cloudinary } from "cloudinary";
 
 const AI = new OpenAI({
   apiKey: process.env.GEMINI_API_KEY,
@@ -116,15 +117,13 @@ export const generateImage = async (req, res) => {
       "binary"
     ).toString("base64")}`;
 
-    await sql` INSERT INTO creations (user_id, prompt, content, type) VALUES (${userId}, ${prompt}, ${content}, 'blog-title')`;
-    if (plan !== "premium") {
-      await clerkClient.users.updateUserMetadata(userId, {
-        privateMetadata: {
-          free_user: free_user + 1,
-        },
-      });
-    }
-    res.json({ success: true, content });
+    const { secure_url } = await cloudinary.uploader.upload(base64Img);
+
+    await sql` INSERT INTO creations (user_id, prompt, content, type, publish) VALUES (${userId}, ${prompt}, ${secure_url}, 'image', ${
+      publish ?? false
+    })`;
+
+    res.json({ success: true, content: secure_url });
   } catch (err) {
     console.log(err.message);
     res.json({ success: false, message: err.message });
