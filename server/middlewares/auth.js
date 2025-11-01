@@ -17,7 +17,7 @@ export const auth = async (req, res, next) => {
       });
       req.free_user = 0;
     }
-    req.plan = hasPremiumPlan ? "premium" : "free";
+    req.plan = hasPremiumPlan ? "premium" : "free_user";
     next();
   } catch (err) {
     res.json({ success: false, message: err.message });
