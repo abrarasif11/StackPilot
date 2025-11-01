@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import sql from "../configs/db.js";
 import { clerkClient } from "@clerk/express";
+import axios from "axios";
 
 const AI = new OpenAI({
   apiKey: process.env.GEMINI_API_KEY,
@@ -73,6 +74,48 @@ export const generateBlogTitle = async (req, res) => {
     });
 
     const content = response.choices[0].message.content;
+    await sql` INSERT INTO creations (user_id, prompt, content, type) VALUES (${userId}, ${prompt}, ${content}, 'blog-title')`;
+    if (plan !== "premium") {
+      await clerkClient.users.updateUserMetadata(userId, {
+        privateMetadata: {
+          free_user: free_user + 1,
+        },
+      });
+    }
+    res.json({ success: true, content });
+  } catch (err) {
+    console.log(err.message);
+    res.json({ success: false, message: err.message });
+  }
+};
+export const generateImage = async (req, res) => {
+  try {
+    const { userId } = req.auth();
+    const { prompt, publish } = req.body;
+    const free_user = req.free_user;
+    if (plan !== "premium") {
+      return res.json({
+        success: false,
+        message: "This feature is only available for Premium subscriptions.",
+      });
+    }
+
+    const formData = new FormData();
+    formData.append("prompt", prompt);
+    const { data } = await axios.post(
+      "https://clipdrop-api.co/text-to-image/v1",
+      formData,
+      {
+        headers: { "x-api-key": process.env.CLIPDROP_API_KEY },
+        responseType: "arraybuffer",
+      }
+    );
+
+    const base64Img = `data:image/png;base64,${Buffer.from(
+      data,
+      "binary"
+    ).toString("base64")}`;
+
     await sql` INSERT INTO creations (user_id, prompt, content, type) VALUES (${userId}, ${prompt}, ${content}, 'blog-title')`;
     if (plan !== "premium") {
       await clerkClient.users.updateUserMetadata(userId, {
