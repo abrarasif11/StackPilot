@@ -1,5 +1,7 @@
 import OpenAI from "openai";
 import sql from "../configs/db.js";
+import FormData from "form-data";
+
 import { clerkClient } from "@clerk/express";
 import axios from "axios";
 import { v2 as cloudinary } from "cloudinary";
@@ -15,7 +17,7 @@ export const generateArticle = async (req, res) => {
     const { prompt, length } = req.body;
     const plan = req.plan;
     const free_user = req.free_user;
-    if (plan !== "premium" && free_user >= 10) {
+    if (plan !== "Premium" && free_user >= 10) {
       return res.json({
         success: false,
         message: "Limit reached. Upgrade to continue.",
@@ -36,7 +38,7 @@ export const generateArticle = async (req, res) => {
 
     const content = response.choices[0].message.content;
     await sql` INSERT INTO creations (user_id, prompt, content, type) VALUES (${userId}, ${prompt}, ${content}, 'article')`;
-    if (plan !== "premium") {
+    if (plan !== "Premium") {
       await clerkClient.users.updateUserMetadata(userId, {
         privateMetadata: {
           free_user: free_user + 1,
@@ -55,7 +57,7 @@ export const generateBlogTitle = async (req, res) => {
     const { prompt } = req.body;
     const plan = req.plan;
     const free_user = req.free_user;
-    if (plan !== "premium" && free_user >= 10) {
+    if (plan !== "Premium" && free_user >= 10) {
       return res.json({
         success: false,
         message: "Limit reached. Upgrade to continue.",
@@ -76,7 +78,7 @@ export const generateBlogTitle = async (req, res) => {
 
     const content = response.choices[0].message.content;
     await sql` INSERT INTO creations (user_id, prompt, content, type) VALUES (${userId}, ${prompt}, ${content}, 'blog-title')`;
-    if (plan !== "premium") {
+    if (plan !== "Premium") {
       await clerkClient.users.updateUserMetadata(userId, {
         privateMetadata: {
           free_user: free_user + 1,
@@ -89,15 +91,16 @@ export const generateBlogTitle = async (req, res) => {
     res.json({ success: false, message: err.message });
   }
 };
+
 export const generateImage = async (req, res) => {
   try {
     const { userId } = req.auth();
     const { prompt, publish } = req.body;
-    const free_user = req.free_user;
+    const plan = req.plan;
     if (plan !== "premium") {
       return res.json({
         success: false,
-        message: "This feature is only available for Premium subscriptions.",
+        message: "This feature is only for premium subscriptions.",
       });
     }
 
@@ -112,12 +115,12 @@ export const generateImage = async (req, res) => {
       }
     );
 
-    const base64Img = `data:image/png;base64,${Buffer.from(
+    const base64Image = `data:image/png;base64,${Buffer.from(
       data,
       "binary"
     ).toString("base64")}`;
 
-    const { secure_url } = await cloudinary.uploader.upload(base64Img);
+    const { secure_url } = await cloudinary.uploader.upload(base64Image);
 
     await sql` INSERT INTO creations (user_id, prompt, content, type, publish) VALUES (${userId}, ${prompt}, ${secure_url}, 'image', ${
       publish ?? false
